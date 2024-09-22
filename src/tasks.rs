@@ -78,9 +78,14 @@ impl TaskList {
         println!("{}", self);
     }
 
-    pub fn get_by_id(&mut self, id: usize) -> Option<usize> {
+    pub fn get_by_id(&mut self, id: usize) -> Option<&mut Task> {
         // returns the position in vector
-        return self.0.iter_mut().position(|task| task.id == id);
+        let position = self.0.iter().position(|task| task.id == id);
+
+        match position {
+            Some(p) => Some(self.0.get_mut(p).unwrap()),
+            None => None,
+        }
     }
 
     pub fn add(&mut self, title: &str) {
@@ -95,14 +100,14 @@ impl TaskList {
         self.0.push(new_task);
     }
 
-    pub fn delete(&mut self, id: usize) -> Result<&Task, String> {
-        let task = self.get_by_id(id);
-        match task {
-            Some(idx) => {
-                self.0.retain(|t| t.id != id);
-                Ok(&self.0[idx])
+    pub fn delete(&mut self, id: usize) -> Result<Task, String> {
+        let task_position = self.0.iter().position(|t| t.id == id);
+        match task_position {
+            Some(pos) => {
+                let task = self.0.remove(pos);
+                Ok(task)
             }
-            None => Err("Task not found".to_string()),
+            None => Err("Task with this id not found".to_string()),
         }
     }
 
@@ -110,9 +115,9 @@ impl TaskList {
         let task = self.get_by_id(id);
 
         match task {
-            Some(idx) => {
-                self.0[idx].status = TaskStatus::Todo;
-                Ok(&self.0[idx])
+            Some(t) => {
+                t.status = TaskStatus::Todo;
+                Ok(t)
             }
             None => Err("Task not found".to_string()),
         }
@@ -122,9 +127,9 @@ impl TaskList {
         let task = self.get_by_id(id);
 
         match task {
-            Some(idx) => {
-                self.0[idx].status = TaskStatus::InProgress;
-                Ok(&self.0[idx])
+            Some(t) => {
+                t.status = TaskStatus::InProgress;
+                Ok(t)
             }
             None => Err("Task not found".to_string()),
         }
@@ -134,9 +139,9 @@ impl TaskList {
         let task = self.get_by_id(id);
 
         match task {
-            Some(idx) => {
-                self.0[idx].status = TaskStatus::Done;
-                Ok(&self.0[idx])
+            Some(t) => {
+                t.status = TaskStatus::Done;
+                Ok(t)
             }
             None => Err("Task not found".to_string()),
         }

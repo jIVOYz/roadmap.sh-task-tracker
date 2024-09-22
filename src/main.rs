@@ -49,8 +49,12 @@ fn main() {
             let task = tasks.get_by_id(id);
 
             match task {
-                Some(t) => println!("{}", t),
-                None => println!("Task not found")
+                Some(t) => {
+                    println!("{t}")
+                },
+                None => {
+                    println!("Task not found")
+                }
             }
         }
 
