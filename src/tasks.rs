@@ -37,6 +37,8 @@ impl Display for Task {
 
 const FILE_PATH: &str = "./tasks.json";
 
+// TODO: Consider using HashMap<usize, Task> instead of Vec<Task> for significantly better performance
+// when looking up tasks by ID. Current implementation has O(n) lookup time, HashMap would be O(1).
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TaskList(pub Vec<Task>);
 
